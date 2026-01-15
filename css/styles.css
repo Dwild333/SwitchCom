@@ -1,0 +1,1867 @@
+/* ========================================
+   SwitchCom — Minimalist Zen Puzzle
+   Design Tokens & Base Styles
+   ======================================== */
+
+:root {
+  /* Light Mode Tokens (Primary) */
+  --bg: #FAFAFA;
+  --bg-secondary: #F0F0F0;
+  --switch-off: #E8E8E8;
+  --switch-on: #1A1A1A;
+  --switch-accent: #7a7a7a;
+  --hint-glow: rgba(180, 180, 180, 0.2);
+  --text: #2A2A2A;
+  --text-muted: #6A6A6A;
+  --text-light: #A0A0A0;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --shadow-strong: rgba(0, 0, 0, 0.15);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  --glass-blur: blur(12px);
+  
+  /* Animation Tokens */
+  --toggle-duration: 120ms;
+  --toggle-easing: ease-in-out;
+  --pulse-duration: 100ms;
+  --pulse-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --glow-duration: 350ms;
+  --ripple-duration: 600ms;
+  --shake-duration: 100ms;
+  --unlock-duration: 800ms;
+  
+  /* Spacing - Spread out switches more */
+  --switch-gap: clamp(2rem, 5vw, 4rem);
+  --switch-size: clamp(0.9rem, 3vw, 1.4rem);
+  
+  /* Typography */
+  --font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ========================================
+   Dark Mode
+   ======================================== */
+[data-theme="dark"] {
+  --bg: #0D0D0D;
+  --bg-secondary: #1A1A1A;
+  --switch-off: #2A2A2A;
+  --switch-on: #E8E8E8;
+  --switch-accent: #888888;
+  --hint-glow: rgba(100, 100, 100, 0.3);
+  --text: #E8E8E8;
+  --text-muted: #A0A0A0;
+  --text-light: #606060;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-strong: rgba(0, 0, 0, 0.5);
+  
+  /* Glassmorphism - Dark */
+  --glass-bg: rgba(30, 30, 30, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] #app {
+  background: var(--bg);
+}
+
+[data-theme="dark"] .settings-content {
+  background: var(--bg-secondary);
+  border-color: var(--glass-border);
+}
+
+[data-theme="dark"] .setting-toggle-slider {
+  background: var(--bg);
+}
+
+[data-theme="dark"] .toggle-container {
+  background: var(--switch-off);
+}
+
+[data-theme="dark"] .toggle-checkbox:checked + .toggle-container {
+  background: var(--switch-on);
+}
+
+[data-theme="dark"] .toggle-button {
+  background: var(--bg);
+}
+
+[data-theme="dark"] .toggle-checkbox:checked + .toggle-container .toggle-button {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .pause-modal,
+[data-theme="dark"] .gameover-screen {
+  background: rgba(13, 13, 13, 0.95);
+}
+
+[data-theme="dark"] .pause-content,
+[data-theme="dark"] .gameover-content {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .start-screen {
+  background: var(--bg);
+}
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  font-family: var(--font-family);
+  font-weight: 300;
+  line-height: 1.5;
+  background: var(--bg);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 2rem 1.5rem;
+  background: var(--bg);
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========================================
+   Top Stats Bar (Timer + Clicks) - Glassmorphism
+   ======================================== */
+
+.stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 2.5rem;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.75rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  min-width: 100px;
+  box-shadow: var(--glass-shadow);
+}
+
+.stat-label {
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.stat-value.warning {
+  color: #c9a030;
+}
+
+.stat-value.danger {
+  color: #b85555;
+}
+
+/* Hint stat box (correct count + direction) */
+.hint-stat-box {
+  min-width: 80px;
+}
+
+.hint-stat-content {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.hint-direction-inline {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.hint-direction-inline.visible {
+  opacity: 1;
+}
+
+.hint-direction-inline.warmer {
+  color: #5a9a5a;
+}
+
+.hint-direction-inline.colder {
+  color: #9a5a5a;
+}
+
+.hint-direction-inline.same {
+  color: var(--text-light);
+}
+
+/* Run Stats Bar (total time + total clicks) */
+.run-stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.run-stats-bar.visible {
+  opacity: 1;
+}
+
+.run-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.run-stat-label {
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.run-stat-value {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   Level Progression Bar
+   ======================================== */
+
+.level-progression {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.level-progression.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.level-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+}
+
+.level-node.completed {
+  opacity: 0.4;
+  transform: scale(0.85);
+}
+
+.level-node.current {
+  border-color: var(--switch-accent);
+  background: rgba(122, 122, 122, 0.15);
+}
+
+.level-node.upcoming {
+  opacity: 0.3;
+  transform: scale(0.85);
+}
+
+.level-num {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.level-connector {
+  width: 30px;
+  height: 2px;
+  background: var(--text-light);
+  position: relative;
+  opacity: 0.3;
+}
+
+.level-connector-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--switch-accent);
+  transition: width 0.5s ease;
+}
+
+.level-connector.faded {
+  opacity: 0.15;
+}
+
+/* ========================================
+   Points Display
+   ======================================== */
+
+.points-display {
+  position: fixed;
+  top: 5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 40;
+}
+
+.points-display.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.points-label {
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.points-value {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.points-value.bump {
+  transform: scale(1.15);
+  color: var(--text);
+}
+
+/* Floating Points Animation */
+.floating-points-container {
+  position: fixed;
+  top: 0;
+  right: 1.5rem;
+  width: 80px;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 35;
+  overflow: hidden;
+}
+
+.floating-point {
+  position: absolute;
+  right: 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--switch-accent);
+  opacity: 0;
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1);
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.9);
+  }
+}
+
+/* ========================================
+   Lives Display
+   ======================================== */
+
+.lives-display {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 40;
+}
+
+.lives-display.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lives-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--switch-accent);
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.lives-icon.lost {
+  background: var(--text-light);
+  opacity: 0.3;
+  transform: scale(0.8);
+}
+
+.lives-icon.used {
+  animation: lifeLost 0.4s ease forwards;
+}
+
+@keyframes lifeLost {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.3;
+    background: var(--text-light);
+  }
+}
+
+/* ========================================
+   Game Container
+   ======================================== */
+
+.game-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+}
+
+/* ========================================
+   Switch Layouts (Creative Patterns)
+   ======================================== */
+
+.switch-row {
+  display: grid;
+  gap: var(--switch-gap);
+  padding: 2rem;
+  transition: transform var(--pulse-duration) var(--pulse-easing), opacity 0.3s ease;
+}
+
+/* ========================================
+   Level-Specific Layouts (Levels 1-30)
+   Unique, interesting patterns for each level
+   ======================================== */
+
+/* Level 1: Horizontal 2 switches */
+.switch-row.layout-horizontal-2 {
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+}
+
+/* Level 2: Vertical 2 switches */
+.switch-row.layout-vertical-2 {
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
+}
+
+/* Level 3: Triangle 3 switches */
+.switch-row.layout-triangle-3 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-triangle-3 .toggle-wrapper:nth-child(1) { grid-column: 1 / span 2; grid-row: 1; }
+.switch-row.layout-triangle-3 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-triangle-3 .toggle-wrapper:nth-child(3) { grid-column: 2; grid-row: 2; }
+
+/* Level 4: Line 3 switches */
+.switch-row.layout-line-3 {
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+}
+
+/* Level 5: Square 4 switches */
+.switch-row.layout-square-4 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
+}
+
+/* Level 6: Diamond 4 switches */
+.switch-row.layout-diamond-4 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-diamond-4 .toggle-wrapper:nth-child(1) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-diamond-4 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-diamond-4 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-diamond-4 .toggle-wrapper:nth-child(4) { grid-column: 2; grid-row: 3; }
+
+/* Level 7: Plus 5 switches */
+.switch-row.layout-plus-5 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-plus-5 .toggle-wrapper:nth-child(1) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-plus-5 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-plus-5 .toggle-wrapper:nth-child(3) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-plus-5 .toggle-wrapper:nth-child(4) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-plus-5 .toggle-wrapper:nth-child(5) { grid-column: 2; grid-row: 3; }
+
+/* Level 8: X shape 5 switches */
+.switch-row.layout-x-5 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-x-5 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-x-5 .toggle-wrapper:nth-child(2) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-x-5 .toggle-wrapper:nth-child(3) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-x-5 .toggle-wrapper:nth-child(4) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-x-5 .toggle-wrapper:nth-child(5) { grid-column: 3; grid-row: 3; }
+
+/* Level 9: Hexagon 6 switches */
+.switch-row.layout-hexagon-6 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-hexagon-6 .toggle-wrapper:nth-child(1) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-hexagon-6 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-hexagon-6 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-hexagon-6 .toggle-wrapper:nth-child(4) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-hexagon-6 .toggle-wrapper:nth-child(5) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-hexagon-6 .toggle-wrapper:nth-child(6) { grid-column: 3; grid-row: 3; }
+
+/* Level 10: Rectangle 6 switches (2x3) */
+.switch-row.layout-rectangle-6 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
+}
+
+/* Level 11: Arrow 7 switches */
+.switch-row.layout-arrow-7 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(1) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(3) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(4) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(5) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(6) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-arrow-7 .toggle-wrapper:nth-child(7) { grid-column: 1; grid-row: 3; }
+
+/* Level 12: H-Shape 7 switches */
+.switch-row.layout-h-shape-7 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(2) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(3) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(4) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(5) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(6) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-h-shape-7 .toggle-wrapper:nth-child(7) { grid-column: 3; grid-row: 3; }
+
+/* Level 13: Circle 8 switches */
+.switch-row.layout-circle-8 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(1) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(2) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(3) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(6) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(7) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-circle-8 .toggle-wrapper:nth-child(8) { grid-column: 3; grid-row: 3; }
+
+/* Level 14: Hourglass 8 switches */
+.switch-row.layout-hourglass-8 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(4) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(5) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(6) { grid-column: 1; grid-row: 4; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(7) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-hourglass-8 .toggle-wrapper:nth-child(8) { grid-column: 3; grid-row: 4; }
+
+/* Level 15: Grid 9 switches (3x3) */
+.switch-row.layout-grid-9 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+
+/* Level 16: Diamond 9 switches */
+.switch-row.layout-diamond-9 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(6) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(7) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(8) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-diamond-9 .toggle-wrapper:nth-child(9) { grid-column: 4; grid-row: 3; }
+
+/* Level 17: Pentagon 10 switches */
+.switch-row.layout-pentagon-10 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(3) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(4) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(5) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(6) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(7) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 4; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(9) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-pentagon-10 .toggle-wrapper:nth-child(10) { grid-column: 4; grid-row: 2; }
+
+/* Level 18: Cross 10 switches */
+.switch-row.layout-cross-10 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(2) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(3) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(4) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(5) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(6) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(7) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(8) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(9) { grid-column: 3; grid-row: 5; }
+.switch-row.layout-cross-10 .toggle-wrapper:nth-child(10) { grid-column: 2; grid-row: 2; }
+
+/* Level 19: Star 11 switches */
+.switch-row.layout-star-11 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(2) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(3) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(4) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(5) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(6) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(7) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(9) { grid-column: 1; grid-row: 4; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(10) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-star-11 .toggle-wrapper:nth-child(11) { grid-column: 5; grid-row: 4; }
+
+/* Level 20: Chevron 11 switches */
+.switch-row.layout-chevron-11 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(2) { grid-column: 5; grid-row: 1; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(3) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(4) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(5) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(6) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(7) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(8) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(9) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(10) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-chevron-11 .toggle-wrapper:nth-child(11) { grid-column: 3; grid-row: 1; }
+
+/* Level 21: Hexagon 12 switches */
+.switch-row.layout-hexagon-12 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(1) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(2) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(3) { grid-column: 4; grid-row: 1; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(4) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(5) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(6) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(7) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(8) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(9) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(10) { grid-column: 4; grid-row: 4; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(11) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-hexagon-12 .toggle-wrapper:nth-child(12) { grid-column: 3; grid-row: 3; }
+
+/* Level 22: Triangle 12 switches */
+.switch-row.layout-triangle-12 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(6) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(7) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(9) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(10) { grid-column: 1; grid-row: 4; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(11) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-triangle-12 .toggle-wrapper:nth-child(12) { grid-column: 5; grid-row: 4; }
+
+/* Level 23: Arrow 13 switches */
+.switch-row.layout-arrow-13 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(6) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(7) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(8) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(9) { grid-column: 3; grid-row: 5; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(10) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(11) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(12) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-arrow-13 .toggle-wrapper:nth-child(13) { grid-column: 4; grid-row: 4; }
+
+/* Level 24: Wave 13 switches */
+.switch-row.layout-wave-13 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(3) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(4) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(5) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(6) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(7) { grid-column: 4; grid-row: 1; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(8) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(9) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(10) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(11) { grid-column: 5; grid-row: 1; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(12) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-wave-13 .toggle-wrapper:nth-child(13) { grid-column: 3; grid-row: 1; }
+
+/* Level 25: Butterfly 14 switches */
+.switch-row.layout-butterfly-14 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(2) { grid-column: 5; grid-row: 1; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(3) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(4) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(5) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(6) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(7) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(8) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(9) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(10) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(11) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(12) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(13) { grid-column: 1; grid-row: 4; }
+.switch-row.layout-butterfly-14 .toggle-wrapper:nth-child(14) { grid-column: 5; grid-row: 4; }
+
+/* Level 26: Diamond 14 switches */
+.switch-row.layout-diamond-14 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(6) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(7) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(9) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(10) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(11) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(12) { grid-column: 4; grid-row: 4; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(13) { grid-column: 3; grid-row: 5; }
+.switch-row.layout-diamond-14 .toggle-wrapper:nth-child(14) { grid-column: 1; grid-row: 2; }
+
+/* Level 27: Pyramid 15 switches */
+.switch-row.layout-pyramid-15 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(6) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(7) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(9) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(10) { grid-column: 1; grid-row: 4; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(11) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(12) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(13) { grid-column: 4; grid-row: 4; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(14) { grid-column: 5; grid-row: 4; }
+.switch-row.layout-pyramid-15 .toggle-wrapper:nth-child(15) { grid-column: 3; grid-row: 5; }
+
+/* Level 28: Spiral 15 switches */
+.switch-row.layout-spiral-15 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(1) { grid-column: 1; grid-row: 1; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 1; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 1; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(5) { grid-column: 5; grid-row: 1; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(6) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(7) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(9) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(10) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(11) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(12) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(13) { grid-column: 3; grid-row: 5; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(14) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-spiral-15 .toggle-wrapper:nth-child(15) { grid-column: 1; grid-row: 3; }
+
+/* Level 29: Grid 16 switches (4x4) */
+.switch-row.layout-grid-16 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+}
+
+/* Level 30: Flower 16 switches */
+.switch-row.layout-flower-16 {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(1) { grid-column: 3; grid-row: 1; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(2) { grid-column: 2; grid-row: 2; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(4) { grid-column: 4; grid-row: 2; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(5) { grid-column: 1; grid-row: 3; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(6) { grid-column: 2; grid-row: 3; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(7) { grid-column: 3; grid-row: 3; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(8) { grid-column: 4; grid-row: 3; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(9) { grid-column: 5; grid-row: 3; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(10) { grid-column: 2; grid-row: 4; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(11) { grid-column: 3; grid-row: 4; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(12) { grid-column: 4; grid-row: 4; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(13) { grid-column: 3; grid-row: 5; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(14) { grid-column: 1; grid-row: 2; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(15) { grid-column: 5; grid-row: 2; }
+.switch-row.layout-flower-16 .toggle-wrapper:nth-child(16) { grid-column: 1; grid-row: 4; }
+
+/* Fallback layouts for levels 31+ */
+.switch-row[class*="layout-grid-"] {
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+}
+.switch-row[class*="layout-diamond-"][class*="-17"],
+.switch-row[class*="layout-diamond-"][class*="-18"],
+.switch-row[class*="layout-diamond-"][class*="-19"],
+.switch-row[class*="layout-diamond-"][class*="-20"] {
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row[class*="layout-hexagon-"][class*="-17"],
+.switch-row[class*="layout-hexagon-"][class*="-18"],
+.switch-row[class*="layout-hexagon-"][class*="-19"],
+.switch-row[class*="layout-hexagon-"][class*="-20"] {
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row[class*="layout-circle-"] {
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+}
+.switch-row[class*="layout-pyramid-"] {
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+}
+
+/* Animations */
+.switch-row.micro-pulse {
+  animation: microPulse var(--pulse-duration) var(--pulse-easing);
+}
+
+.switch-row.shake {
+  animation: shake var(--shake-duration) ease-in-out;
+}
+
+@keyframes microPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* ========================================
+   Switch Component (Neumorphic Style - Light Mode)
+   ======================================== */
+
+.toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 0.5em;
+  padding: 0.125em;
+  font-size: var(--switch-size);
+  cursor: pointer;
+  transition: transform var(--toggle-duration) var(--toggle-easing);
+  background-image: linear-gradient(to bottom, #d5d5d5, #e8e8e8);
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.toggle-wrapper:active {
+  transform: scale(0.96);
+}
+
+.toggle-checkbox {
+  appearance: none;
+  position: absolute;
+  z-index: 1;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-radius: 0.375em;
+  width: 3em;
+  height: 1.5em;
+  background-color: #e8e8e8;
+  box-shadow: 
+    inset 0 0 0.0625em 0.125em rgba(255, 255, 255, 0.2),
+    inset 0 0.0625em 0.125em rgba(0, 0, 0, 0.4);
+  transition: background-color 0.4s linear;
+}
+
+.toggle-checkbox:checked + .toggle-container {
+  background-color: #7a7a7a;
+}
+
+.toggle-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0.0625em;
+  border-radius: 0.3125em;
+  width: 1.375em;
+  height: 1.375em;
+  background-color: #e8e8e8;
+  box-shadow: 
+    inset 0 -0.0625em 0.0625em 0.125em rgba(0, 0, 0, 0.1),
+    inset 0 -0.125em 0.0625em rgba(0, 0, 0, 0.2),
+    inset 0 0.1875em 0.0625em rgba(255, 255, 255, 0.3),
+    0 0.125em 0.125em rgba(0, 0, 0, 0.5);
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-checkbox:checked + .toggle-container > .toggle-button {
+  left: 1.5625em;
+}
+
+.toggle-button-circles-container {
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  gap: 0.125em;
+  position: absolute;
+  margin: 0 auto;
+}
+
+.toggle-button-circle {
+  border-radius: 50%;
+  width: 0.125em;
+  height: 0.125em;
+  background-image: radial-gradient(circle at 50% 0, #f5f5f5, #c4c4c4);
+}
+
+/* ========================================
+   Hint System
+   ======================================== */
+
+.hint-glow-line {
+  position: absolute;
+  bottom: calc(50% - 5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 300px;
+  height: 2px;
+  background: var(--text-muted);
+  opacity: 0;
+  border-radius: 1px;
+  transition: opacity var(--glow-duration) ease-out;
+  pointer-events: none;
+}
+
+.hint-glow-line.active {
+  animation: glowPulse var(--glow-duration) ease-out;
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0; }
+  30% { opacity: var(--hint-opacity, 0.15); }
+  100% { opacity: 0; }
+}
+
+.proximity-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 200%;
+  background: radial-gradient(ellipse at center, var(--hint-glow) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* ========================================
+   Success Overlay & Unlock Animation
+   ======================================== */
+
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.success-ripple {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--switch-accent);
+  opacity: 0;
+  transition: none;
+}
+
+.success-ripple.active {
+  animation: successRipple var(--ripple-duration) ease-out forwards;
+}
+
+@keyframes successRipple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    width: 250vmax;
+    height: 250vmax;
+    opacity: 0;
+  }
+}
+
+/* Unlock animation overlay */
+.unlock-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 150;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.unlock-overlay.active {
+  opacity: 1;
+}
+
+.unlock-text {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--switch-accent);
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.unlock-overlay.active .unlock-text {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.unlock-level {
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 200;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s;
+}
+
+.unlock-overlay.active .unlock-level {
+  opacity: 0.3;
+  transform: scale(1);
+}
+
+/* ========================================
+   Failure Overlay
+   ======================================== */
+
+.failure-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(80, 40, 40, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.3s ease;
+}
+
+.failure-overlay.active {
+  animation: failureFade 0.6s ease-out;
+}
+
+@keyframes failureFade {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ========================================
+   Settings Button
+   ======================================== */
+
+.settings-btn {
+  display: none; /* Hidden - using new header settings buttons */
+}
+
+.settings-btn:hover {
+  opacity: 1;
+}
+
+.settings-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ========================================
+   Settings Modal
+   ======================================== */
+
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 200;
+}
+
+.settings-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.settings-content {
+  background: var(--bg);
+  border: 1px solid var(--text-light);
+  border-radius: 1rem;
+  padding: 2rem;
+  min-width: 280px;
+  max-width: 90vw;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.settings-modal.active .settings-content {
+  transform: translateY(0);
+}
+
+.settings-content h2 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--text-light);
+}
+
+.setting-row:last-of-type {
+  border-bottom: none;
+}
+
+.setting-row span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.setting-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.setting-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.setting-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--text-light);
+  border-radius: 24px;
+  transition: background-color 0.3s ease;
+}
+
+.setting-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: var(--bg);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.setting-toggle input:checked + .setting-toggle-slider {
+  background: var(--switch-accent);
+}
+
+.setting-toggle input:checked + .setting-toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.close-settings {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--text-light);
+  border-radius: 0.5rem;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-settings:hover {
+  background: var(--text-light);
+  color: var(--text);
+}
+
+/* ========================================
+   Start Screen
+   ======================================== */
+
+.start-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.start-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.start-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100%;
+  max-width: 340px;
+  width: 100%;
+  padding: 1rem 0;
+  gap: 0.75rem;
+}
+
+.start-header {
+  flex-shrink: 0;
+}
+
+.start-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.start-footer {
+  display: none; /* Hidden - using new bottom nav */
+}
+
+.game-title {
+  font-size: clamp(1.8rem, 7vw, 2.5rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.25rem;
+  color: var(--text-muted);
+}
+
+.game-subtitle {
+  font-size: clamp(0.6rem, 2vw, 0.75rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+/* Old start/daily buttons hidden - using new play-btn and daily-challenge-btn */
+.start-btn.old-style,
+.daily-btn.old-style,
+.restart-btn {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--text-light);
+  border-radius: 2rem;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.restart-btn {
+  font-size: 0.7rem;
+  padding: 0.6rem 1.25rem;
+  opacity: 0.7;
+}
+
+.restart-btn:hover {
+  opacity: 1;
+  background: var(--switch-accent);
+  border-color: var(--switch-accent);
+  color: var(--bg);
+}
+
+/* Stats Row (compact footer stats) - hidden, using new modals */
+.stats-row {
+  display: none;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.mini-stat-val {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-stat-label {
+  font-size: 0.45rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.badge-stat {
+  min-width: 50px;
+}
+
+.mini-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--text-light);
+  opacity: 0.25;
+}
+
+.mini-badge.earned {
+  opacity: 1;
+  background: linear-gradient(135deg, #d4af37, #f0e68c);
+}
+
+/* Best Runs (compact) - hidden, using new modals */
+.best-runs {
+  display: none;
+}
+
+.best-run-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.best-run-mode {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.best-run-scores {
+  font-size: 0.55rem;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   Reduce Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+#app.reduce-motion *,
+#app.reduce-motion *::before,
+#app.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Hot/Cold glow on individual switches */
+.toggle-wrapper.hot-glow {
+  animation: hotGlow 0.4s ease;
+}
+
+.toggle-wrapper.cold-glow {
+  animation: coldGlow 0.4s ease;
+}
+
+@keyframes hotGlow {
+  0%, 100% { box-shadow: 0 1px 1px rgba(255, 255, 255, 0.6); }
+  50% { box-shadow: 0 0 12px rgba(100, 160, 100, 0.4); }
+}
+
+@keyframes coldGlow {
+  0%, 100% { box-shadow: 0 1px 1px rgba(255, 255, 255, 0.6); }
+  50% { box-shadow: 0 0 12px rgba(160, 100, 100, 0.3); }
+}
+
+/* ========================================
+   Mode Selection
+   ======================================== */
+
+.mode-select {
+  width: 100%;
+}
+
+.select-label {
+  display: none; /* Hidden - using new UI */
+}
+
+/* Old mode buttons - hidden, using new mode-cards */
+.mode-buttons {
+  display: none;
+}
+
+.mode-btn {
+  display: none;
+}
+
+.mode-icon {
+  font-size: 1rem;
+  margin-right: 0.6rem;
+  width: 20px;
+  text-align: center;
+}
+
+.mode-name {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+/* ========================================
+   Difficulty Selection
+   ======================================== */
+
+.difficulty-select {
+  width: 100%;
+}
+
+/* Old difficulty buttons - hidden, using new difficulty-pills */
+.difficulty-buttons {
+  display: none;
+}
+
+.difficulty-btn {
+  display: none;
+}
+
+/* ========================================
+   Pause Button
+   ======================================== */
+
+.pause-btn {
+  position: fixed;
+  top: 1rem;
+  right: 3.5rem;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 50;
+}
+
+.pause-btn.visible {
+  display: none; /* Hidden - using new gameplay header pause button */
+}
+
+.pause-btn:hover {
+  opacity: 1;
+}
+
+.pause-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Budget warning states */
+.run-stat-value.warning {
+  color: #c9a030;
+}
+
+.run-stat-value.danger {
+  color: #b85555;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ========================================
+   Pause Modal
+   ======================================== */
+
+.pause-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(250, 250, 250, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 250;
+}
+
+.pause-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pause-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.pause-content h2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.pause-stats {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+
+.resume-btn,
+.menu-btn {
+  display: block;
+  width: 180px;
+  margin: 0 auto 1rem;
+  padding: 1rem 2rem;
+  background: transparent;
+  border: 1px solid var(--text-light);
+  border-radius: 2rem;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resume-btn:hover {
+  background: var(--switch-accent);
+  border-color: var(--switch-accent);
+  color: var(--bg);
+}
+
+.menu-btn {
+  font-size: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  opacity: 0.7;
+}
+
+.menu-btn:hover {
+  opacity: 1;
+  background: var(--text-light);
+  color: var(--text);
+}
+
+/* ========================================
+   Game Over Screen
+   ======================================== */
+
+.gameover-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(250, 250, 250, 0.98);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 280;
+}
+
+.gameover-screen.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gameover-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.gameover-title {
+  font-size: 1.8rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.gameover-reason {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+
+.gameover-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.gameover-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gameover-stat .stat-label {
+  font-size: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.gameover-stat .stat-val {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--text);
+}
+
+.play-again-btn {
+  display: block;
+  width: 180px;
+  margin: 0 auto 1rem;
+  padding: 1rem 2rem;
+  background: var(--switch-accent);
+  border: 1px solid var(--switch-accent);
+  border-radius: 2rem;
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-again-btn:hover {
+  background: var(--text);
+  border-color: var(--text);
+}

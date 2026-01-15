@@ -1,0 +1,1539 @@
+/* ========================================
+   SwitchCom — Gamification UI Styles
+   Clean Glassmorphism, Monochrome, Neutral
+   ======================================== */
+
+/* ========================================
+   Color Palette - Minimalist Neutral
+   ======================================== */
+:root {
+  /* Neutral Palette - No colors */
+  --accent: #2A2A2A;
+  --accent-light: #4A4A4A;
+  --accent-muted: #6A6A6A;
+  
+  /* Functional Colors - Muted grays */
+  --coin-bg: #F5F5F5;
+  --coin-text: #4A4A4A;
+  
+  --success-muted: #6A6A6A;
+  --danger-muted: #5A5A5A;
+  
+  /* Primary - Dark gray gradient */
+  --primary-dark: #2A2A2A;
+  --primary-gradient: linear-gradient(135deg, #3A3A3A 0%, #2A2A2A 100%);
+  
+  /* Shadows - Subtle */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* ========================================
+   Dark Mode Support
+   ======================================== */
+[data-theme="dark"] {
+  --bg: #0D0D0D;
+  --bg-secondary: #1A1A1A;
+  --text: #E8E8E8;
+  --text-muted: #A0A0A0;
+  --text-light: #707070;
+  --glass-bg: rgba(30, 30, 30, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --switch-off: #2A2A2A;
+  --switch-on: #E0E0E0;
+  --coin-bg: #1A1A1A;
+  --coin-text: #A0A0A0;
+}
+
+[data-theme="dark"] .mode-card,
+[data-theme="dark"] .difficulty-pills,
+[data-theme="dark"] .home-bottom-nav,
+[data-theme="dark"] .icon-btn {
+  background: rgba(30, 30, 30, 0.8);
+}
+
+[data-theme="dark"] .play-btn {
+  background: linear-gradient(135deg, #E8E8E8 0%, #D0D0D0 100%);
+  color: #1A1A1A;
+}
+
+[data-theme="dark"] .difficulty-pill.selected {
+  background: #2A2A2A;
+  color: #E8E8E8;
+}
+
+[data-theme="dark"] .level-complete-overlay {
+  background: rgba(13, 13, 13, 0.95);
+}
+
+[data-theme="dark"] .modal-content {
+  background: #1A1A1A;
+}
+
+[data-theme="dark"] .gameplay-header,
+[data-theme="dark"] .gameplay-stats-card {
+  background: rgba(30, 30, 30, 0.85);
+}
+
+[data-theme="dark"] .gameplay-btn {
+  background: rgba(40, 40, 40, 0.8);
+}
+
+[data-theme="dark"] .gameplay-level-badge {
+  background: rgba(40, 40, 40, 0.9);
+}
+
+[data-theme="dark"] .powerups-bar {
+  background: rgba(30, 30, 30, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .powerup-btn {
+  background: rgba(40, 40, 40, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .powerup-btn:hover:not(:disabled) {
+  background: rgba(50, 50, 50, 1);
+}
+
+[data-theme="dark"] .home-header,
+[data-theme="dark"] .home-content {
+  background: var(--bg);
+}
+
+[data-theme="dark"] .currency-display {
+  background: rgba(30, 30, 30, 0.8);
+}
+
+[data-theme="dark"] .nav-tab.active {
+  background: rgba(50, 50, 50, 0.8);
+}
+
+/* ========================================
+   Gameplay Header - Mobile Friendly
+   ======================================== */
+.gameplay-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.gameplay-header.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gameplay-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gameplay-btn:hover {
+  background: white;
+  color: var(--text);
+}
+
+.gameplay-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gameplay-level-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.gameplay-level-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+}
+
+.gameplay-level-num {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ========================================
+   Gameplay Stats Card - Clean Glass
+   ======================================== */
+.gameplay-stats-card {
+  position: fixed;
+  top: calc(70px + env(safe-area-inset-top, 0px));
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.gameplay-stats-card.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gameplay-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.gameplay-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.gameplay-stat-value {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.gameplay-stat-value.warning {
+  color: #9A7A3A;
+}
+
+.gameplay-stat-value.danger {
+  color: #9A5A5A;
+}
+
+.gameplay-stat-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-top: 0.15rem;
+}
+
+.gameplay-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--glass-border);
+  margin: 0 0.5rem;
+}
+
+.gameplay-hint-direction {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gameplay-hint-direction.visible {
+  opacity: 1;
+}
+
+.gameplay-hint-direction.warmer {
+  color: #5A8A5A;
+}
+
+.gameplay-hint-direction.colder {
+  color: #8A5A5A;
+}
+
+.gameplay-hint-direction.same {
+  color: var(--text-light);
+}
+
+/* ========================================
+   Home Screen Top Bar
+   ======================================== */
+.home-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+  margin-bottom: 0.75rem;
+}
+
+.icon-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-soft);
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text);
+}
+
+.icon-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+}
+
+/* Currency display - monochrome */
+.currency-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+}
+
+.coin-icon {
+  font-size: 1.1rem;
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.coin-icon.large {
+  font-size: 1.8rem;
+}
+
+.coin-amount {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* App title in header */
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.header-title svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ========================================
+   Player Level & XP Display
+   ======================================== */
+.player-level-display {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-card);
+}
+
+.player-level-badge {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.player-level-num {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.xp-bar-container {
+  flex: 1;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.xp-text {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+/* ========================================
+   Logo - Hidden, using title instead
+   ======================================== */
+.logo-container {
+  display: none;
+}
+
+/* ========================================
+   Mode Cards - Clean Glassmorphism
+   ======================================== */
+.mode-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.mode-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  box-shadow: var(--shadow-card);
+}
+
+.mode-card:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.mode-card.selected {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-medium);
+}
+
+.mode-card-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  font-size: 1.3rem;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.mode-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mode-card-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.mode-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+/* ========================================
+   Difficulty Pills - Clean Segmented
+   ======================================== */
+.difficulty-pills {
+  display: flex;
+  width: 100%;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.difficulty-pill {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.difficulty-pill:hover {
+  color: var(--text-muted);
+}
+
+.difficulty-pill.selected {
+  background: white;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   Play Button - Dark, Clean
+   ======================================== */
+.play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1.1rem 2rem;
+  margin-top: 1.25rem;
+  background: var(--primary-gradient);
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: var(--shadow-medium);
+  transition: all 0.3s ease;
+}
+
+.play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.play-btn:active {
+  transform: translateY(0);
+}
+
+.play-btn-icon {
+  font-size: 1rem;
+  filter: none;
+}
+
+.play-btn-text {
+  letter-spacing: 0.1em;
+}
+
+/* ========================================
+   Daily Challenge Button - Subtle
+   ======================================== */
+.daily-challenge-btn {
+  display: none; /* Hidden for now - can enable later */
+}
+
+/* ========================================
+   Bottom Navigation - Clean Glass
+   ======================================== */
+.home-bottom-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 18px;
+  margin-top: auto;
+  box-shadow: var(--shadow-card);
+}
+
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 14px;
+  color: var(--text-light);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-tab svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+}
+
+.nav-tab:hover {
+  color: var(--text-muted);
+}
+
+.nav-tab:hover svg {
+  opacity: 0.8;
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.nav-tab.active svg {
+  opacity: 1;
+}
+
+/* ========================================
+   Modals - Clean Glass
+   ======================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 400;
+  padding: 1rem;
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--bg);
+  border-radius: 24px;
+  padding: 1.5rem;
+  max-width: 360px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.modal.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-content.modal-large {
+  max-width: 400px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: none;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   Daily Reward Modal
+   ======================================== */
+.daily-reward-modal .modal-content {
+  text-align: center;
+}
+
+.daily-reward-modal h2 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.daily-streak-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.streak-fire {
+  font-size: 1.3rem;
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.streak-count {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.streak-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.daily-reward-amount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  margin-bottom: 1rem;
+}
+
+.reward-coins {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.daily-calendar {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-day {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.calendar-day.claimed {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-muted);
+}
+
+.calendar-day.today {
+  background: var(--accent);
+  color: white;
+}
+
+.calendar-day.future {
+  opacity: 0.4;
+}
+
+.claim-btn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary-gradient);
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  box-shadow: var(--shadow-medium);
+  transition: all 0.2s ease;
+}
+
+.claim-btn:hover {
+  transform: translateY(-2px);
+}
+
+.claim-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   Achievements Modal
+   ======================================== */
+.achievements-progress {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+
+.achievement-item.locked {
+  opacity: 0.4;
+}
+
+.achievement-item.unlocked {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.achievement-icon {
+  font-size: 1.3rem;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-radius: 11px;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.achievement-desc {
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+.achievement-reward {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   Shop Modal
+   ======================================== */
+.shop-coins {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.shop-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+}
+
+.shop-item-icon {
+  font-size: 1.5rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-radius: 12px;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.shop-item-info {
+  flex: 1;
+}
+
+.shop-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.shop-item-desc {
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+.shop-item-buy {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--primary-gradient);
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-item-buy:hover {
+  transform: scale(1.05);
+}
+
+.shop-item-buy:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   Stats Modal
+   ======================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 14px;
+}
+
+.stat-card-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stat-card-label {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.best-runs-section h3 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.best-runs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.best-run-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+}
+
+.best-run-mode-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.best-run-scores-display {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.best-run-scores-display span {
+  padding: 0.25rem 0.5rem;
+  background: var(--bg);
+  border-radius: 6px;
+}
+
+/* ========================================
+   Leaderboard Modal
+   ======================================== */
+.leaderboard-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 4px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.lb-tab {
+  flex: 1;
+  padding: 0.55rem;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lb-tab.active {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.leaderboard-list {
+  min-height: 200px;
+}
+
+.leaderboard-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.leaderboard-placeholder .sub {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   Power-ups Bar (Gameplay) - Cleaner
+   ======================================== */
+.powerups-bar {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 60;
+  box-shadow: var(--shadow-medium);
+}
+
+.powerups-bar.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.powerup-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+}
+
+.powerup-btn:hover:not(:disabled) {
+  background: white;
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-2px);
+}
+
+.powerup-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.powerup-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.powerup-icon {
+  font-size: 1.3rem;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.powerup-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.powerup-cost {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.powerup-btn.has-inventory .powerup-cost {
+  color: var(--text);
+}
+
+/* ========================================
+   Level Complete Celebration - Clean
+   ======================================== */
+.level-complete-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(250, 250, 250, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 500;
+}
+
+.level-complete-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.level-complete-content {
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.level-complete-overlay.active .level-complete-content {
+  transform: scale(1);
+}
+
+.level-badge-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 1.25rem;
+}
+
+.level-badge {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-gradient);
+  border-radius: 22px;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  z-index: 2;
+}
+
+.level-badge-num {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: white;
+}
+
+.level-badge-glow {
+  position: absolute;
+  inset: -8px;
+  background: var(--accent);
+  border-radius: 28px;
+  opacity: 0.15;
+  filter: blur(12px);
+  animation: badgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.05); }
+}
+
+.level-complete-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.level-rewards {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.level-reward {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.level-reward .coin-icon,
+.level-reward .xp-icon {
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.reward-amount {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.xp-icon {
+  font-size: 1.1rem;
+}
+
+.streak-indicator {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+}
+
+.streak-indicator.visible {
+  display: flex;
+  animation: bounceIn 0.5s ease;
+}
+
+.streak-text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.perfect-indicator {
+  display: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.perfect-indicator.visible {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ========================================
+   Achievement Toast - Clean
+   ======================================== */
+.achievement-toast {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 600;
+}
+
+.achievement-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.achievement-toast-icon {
+  font-size: 1.4rem;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.achievement-toast-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.achievement-toast-title {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.achievement-toast-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ========================================
+   Game Over Rewards
+   ======================================== */
+.gameover-rewards {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.reward-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.reward-icon {
+  font-size: 1.2rem;
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.reward-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ========================================
+   Gameplay Currency Display
+   ======================================== */
+.gameplay-currency {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 45;
+}
+
+.gameplay-currency.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gameplay-coins {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   Lives as Hearts - Monochrome
+   ======================================== */
+.lives-hearts {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.heart {
+  font-size: 1rem;
+  filter: grayscale(1);
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.heart.lost {
+  opacity: 0.2;
+}
+
+.heart.losing {
+  animation: heartLose 0.4s ease;
+}
+
+@keyframes heartLose {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); opacity: 0.4; }
+  100% { transform: scale(0.9); opacity: 0.2; }
+}
+
+/* ========================================
+   Safe Area Padding (iOS)
+   ======================================== */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .start-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .home-bottom-nav {
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+  
+  .powerups-bar {
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* ========================================
+   Responsive Adjustments
+   ======================================== */
+@media (max-height: 700px) {
+  .player-level-display {
+    margin-bottom: 0.5rem;
+    padding: 0.6rem 0.875rem;
+  }
+  
+  .mode-card {
+    padding: 0.75rem 1rem;
+  }
+  
+  .play-btn {
+    padding: 0.95rem 1.5rem;
+    margin-top: 1rem;
+  }
+}

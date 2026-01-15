@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>SwitchCom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/gamification.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Gameplay Header - Mobile Friendly -->
+    <div class="gameplay-header" id="gameplay-header">
+      <button class="gameplay-btn" id="pause-btn-header" aria-label="Pause">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <rect x="6" y="4" width="4" height="16" rx="1"/>
+          <rect x="14" y="4" width="4" height="16" rx="1"/>
+        </svg>
+      </button>
+      <div class="gameplay-level-badge">
+        <span class="gameplay-level-label">Level</span>
+        <span class="gameplay-level-num" id="level-number">1</span>
+      </div>
+      <button class="gameplay-btn" id="settings-btn-gameplay" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Gameplay Stats Card - Clean Glass -->
+    <div class="gameplay-stats-card" id="gameplay-stats-card">
+      <div class="gameplay-stat" id="coins-stat">
+        <span class="gameplay-stat-value" id="gameplay-coins">0</span>
+        <span class="gameplay-stat-label">Coins</span>
+      </div>
+      <div class="gameplay-stat-divider"></div>
+      <div class="gameplay-stat" id="time-stat">
+        <span class="gameplay-stat-value" id="timer-value">--</span>
+        <span class="gameplay-stat-label">Time</span>
+      </div>
+      <div class="gameplay-stat-divider"></div>
+      <div class="gameplay-stat" id="correct-stat">
+        <div class="gameplay-stat-row">
+          <span class="gameplay-stat-value" id="correct-count">-</span>
+          <span class="gameplay-hint-direction" id="hint-direction"></span>
+        </div>
+        <span class="gameplay-stat-label">Correct</span>
+      </div>
+      <div class="gameplay-stat-divider"></div>
+      <div class="gameplay-stat" id="lives-stat">
+        <span class="gameplay-stat-value" id="lives-value">--</span>
+        <span class="gameplay-stat-label">Lives</span>
+      </div>
+    </div>
+
+    <!-- Legacy elements (hidden, kept for JS compatibility) -->
+    <div class="level-progression" id="level-progression" style="display:none;">
+      <div class="level-node completed" id="level-node-prev"><span class="level-num" id="level-prev-num">-</span></div>
+      <div class="level-connector"><div class="level-connector-fill" id="level-connector-fill"></div></div>
+      <div class="level-node current" id="level-node-current"><span class="level-num">1</span></div>
+      <div class="level-connector faded"><div class="level-connector-fill"></div></div>
+      <div class="level-node upcoming" id="level-node-next"><span class="level-num" id="level-next-num">2</span></div>
+    </div>
+    <div class="stats-bar" style="display:none;">
+      <div class="stat-box"><span class="stat-value" id="clicks-value">--</span></div>
+    </div>
+
+    <!-- Total Points Display -->
+    <div class="points-display" id="points-display">
+      <span class="points-label">Score</span>
+      <span class="points-value" id="points-value">0</span>
+    </div>
+
+    <!-- Floating Points Container -->
+    <div class="floating-points-container" id="floating-points-container"></div>
+
+    <!-- Run Stats Bar (Mode-specific info) -->
+    <div class="run-stats-bar" id="run-stats-bar">
+      <div class="run-stat" id="time-budget-stat">
+        <span class="run-stat-label">Time Left</span>
+        <span class="run-stat-value" id="time-budget-value">3:00</span>
+      </div>
+      <div class="run-stat" id="click-budget-stat">
+        <span class="run-stat-label">Clicks Left</span>
+        <span class="run-stat-value" id="click-budget-value">60</span>
+      </div>
+      <!-- All modes: levels completed -->
+      <div class="run-stat">
+        <span class="run-stat-label">Completed</span>
+        <span class="run-stat-value" id="levels-completed-value">0</span>
+      </div>
+    </div>
+
+    <!-- Pause Button -->
+    <button class="pause-btn" id="pause-btn" aria-label="Pause">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <rect x="6" y="4" width="4" height="16"/>
+        <rect x="14" y="4" width="4" height="16"/>
+      </svg>
+    </button>
+
+    <!-- Main Game Area -->
+    <div class="game-container">
+      <!-- Hint Glow Line -->
+      <div class="hint-glow-line"></div>
+
+      <!-- Switch Row -->
+      <div class="switch-row layout-horizontal" id="switch-row"></div>
+
+      <!-- Proximity Glow -->
+      <div class="proximity-glow"></div>
+
+    </div>
+
+    <!-- Success Ripple Overlay -->
+    <div class="success-overlay">
+      <div class="success-ripple"></div>
+    </div>
+
+    <!-- Unlock Animation Overlay -->
+    <div class="unlock-overlay" id="unlock-overlay">
+      <div class="unlock-text">UNLOCKED</div>
+      <div class="unlock-level" id="unlock-level">2</div>
+    </div>
+
+    <!-- Failure Overlay -->
+    <div class="failure-overlay"></div>
+
+    <!-- Settings Button -->
+    <button class="settings-btn" id="settings-btn" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settings-modal">
+      <div class="settings-content">
+        <h2>Settings</h2>
+        <div class="setting-row">
+          <span>Dark Mode</span>
+          <label class="setting-toggle">
+            <input type="checkbox" id="dark-mode-toggle">
+            <span class="setting-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Haptics</span>
+          <label class="setting-toggle">
+            <input type="checkbox" id="haptics-toggle" checked>
+            <span class="setting-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Sound</span>
+          <label class="setting-toggle">
+            <input type="checkbox" id="sound-toggle" checked>
+            <span class="setting-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Reduce Motion</span>
+          <label class="setting-toggle">
+            <input type="checkbox" id="reduce-motion-toggle">
+            <span class="setting-toggle-slider"></span>
+          </label>
+        </div>
+        <button class="close-settings" id="close-settings">Done</button>
+      </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="start-screen">
+      <div class="start-content">
+        <!-- Top Bar - Clean Header -->
+        <div class="home-top-bar">
+          <button class="icon-btn" id="achievements-btn" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </button>
+          <div class="header-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+              <rect x="2" y="6" width="20" height="12" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="16" cy="12" r="4" fill="currentColor"/>
+            </svg>
+            <span>SwitchCom</span>
+          </div>
+          <button class="icon-btn" id="settings-btn-home" aria-label="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 3v18M3 9h6M3 15h6"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Player Level & XP -->
+        <div class="player-level-display" id="player-level-display">
+          <div class="player-level-badge">
+            <span class="player-level-num" id="player-level">1</span>
+          </div>
+          <div class="xp-bar-container">
+            <div class="xp-bar-fill" id="xp-bar-fill"></div>
+          </div>
+          <span class="xp-text" id="xp-text">0 / 100 XP</span>
+        </div>
+
+        <div class="start-main">
+          <!-- Game Mode Selection -->
+          <div class="mode-select" id="mode-select">
+            <div class="mode-cards">
+              <button class="mode-card selected" data-mode="timeAttack">
+                <div class="mode-card-icon">⏱</div>
+                <div class="mode-card-info">
+                  <span class="mode-card-name">Time Attack</span>
+                  <span class="mode-card-desc">3 min to beat levels</span>
+                </div>
+              </button>
+              <button class="mode-card" data-mode="clickChallenge">
+                <div class="mode-card-icon">☝</div>
+                <div class="mode-card-info">
+                  <span class="mode-card-name">Click Challenge</span>
+                  <span class="mode-card-desc">Limited clicks</span>
+                </div>
+              </button>
+              <button class="mode-card" data-mode="lives">
+                <div class="mode-card-icon">♡</div>
+                <div class="mode-card-info">
+                  <span class="mode-card-name">Lives</span>
+                  <span class="mode-card-desc">Limited lives, no time limit</span>
+                </div>
+              </button>
+              <button class="mode-card" data-mode="endless">
+                <div class="mode-card-icon">∞</div>
+                <div class="mode-card-info">
+                  <span class="mode-card-name">Endless</span>
+                  <span class="mode-card-desc">How far can you go?</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Difficulty Selection -->
+          <div class="difficulty-select" id="difficulty-select">
+            <div class="difficulty-pills">
+              <button class="difficulty-pill" data-difficulty="easy">Easy</button>
+              <button class="difficulty-pill selected" data-difficulty="medium">Medium</button>
+              <button class="difficulty-pill" data-difficulty="hard">Hard</button>
+            </div>
+          </div>
+
+          <!-- Main Play Button -->
+          <button class="play-btn" id="start-btn">
+            <span class="play-btn-icon">▶</span>
+            <span class="play-btn-text">PLAY</span>
+          </button>
+        </div>
+
+        <!-- Bottom Navigation - Daily, Ranks, Stats -->
+        <div class="home-bottom-nav">
+          <button class="nav-tab" data-tab="daily" id="daily-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M16 3v5M8 3v5M3 13h18"/></svg>
+            <span>Daily</span>
+          </button>
+          <button class="nav-tab active" data-tab="leaderboard" id="leaderboard-tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            <span>Ranks</span>
+          </button>
+          <button class="nav-tab" data-tab="stats" id="stats-tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M7 12h.01M7 17h.01M12 7h5M12 12h5M12 17h5"/></svg>
+            <span>Stats</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Reward Modal -->
+    <div class="modal daily-reward-modal" id="daily-reward-modal">
+      <div class="modal-content">
+        <h2>Daily Reward!</h2>
+        <div class="daily-streak-display">
+          <span class="streak-fire">🔥</span>
+          <span class="streak-count" id="daily-streak-count">1</span>
+          <span class="streak-label">Day Streak</span>
+        </div>
+        <div class="daily-reward-amount">
+          <span class="coin-icon large">🪙</span>
+          <span class="reward-coins" id="daily-reward-coins">+50</span>
+        </div>
+        <div class="daily-calendar" id="daily-calendar">
+          <!-- 7 day boxes rendered by JS -->
+        </div>
+        <button class="claim-btn" id="claim-daily-btn">Claim Reward</button>
+      </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div class="modal achievements-modal" id="achievements-modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2>Achievements</h2>
+          <button class="modal-close" id="close-achievements">×</button>
+        </div>
+        <div class="achievements-progress">
+          <span id="achievements-unlocked">0</span> / <span id="achievements-total">0</span> Unlocked
+        </div>
+        <div class="achievements-list" id="achievements-list">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="modal shop-modal" id="shop-modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2>Power-Up Shop</h2>
+          <div class="shop-coins">
+            <span class="coin-icon">🪙</span>
+            <span id="shop-coin-amount">0</span>
+          </div>
+          <button class="modal-close" id="close-shop">×</button>
+        </div>
+        <div class="shop-items" id="shop-items">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal stats-modal" id="stats-modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2>Your Stats</h2>
+          <button class="modal-close" id="close-stats">×</button>
+        </div>
+        <div class="stats-grid" id="stats-grid">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="best-runs-section">
+          <h3>Best Runs</h3>
+          <div class="best-runs-grid" id="best-runs-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal leaderboard-modal" id="leaderboard-modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2>Leaderboard</h2>
+          <button class="modal-close" id="close-leaderboard">×</button>
+        </div>
+        <div class="leaderboard-tabs">
+          <button class="lb-tab active" data-mode="timeAttack">Time Attack</button>
+          <button class="lb-tab" data-mode="clickChallenge">Click</button>
+          <button class="lb-tab" data-mode="endless">Endless</button>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-list">
+          <div class="leaderboard-placeholder">
+            <p>Coming soon!</p>
+            <p class="sub">Connect to compete globally</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div class="pause-modal" id="pause-modal">
+      <div class="pause-content">
+        <h2>Paused</h2>
+        <p class="pause-stats">Level <span id="pause-level">1</span> | <span id="pause-completed">0</span> completed</p>
+        <button class="resume-btn" id="resume-btn">Resume</button>
+        <button class="menu-btn" id="menu-btn">Return to Menu</button>
+      </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div class="gameover-screen" id="gameover-screen">
+      <div class="gameover-content">
+        <h2 class="gameover-title">Game Over</h2>
+        <p class="gameover-reason" id="gameover-reason">Time's up!</p>
+        <div class="gameover-rewards">
+          <div class="reward-item">
+            <span class="reward-icon">🪙</span>
+            <span class="reward-value" id="gameover-coins">+0</span>
+          </div>
+          <div class="reward-item">
+            <span class="reward-icon">⭐</span>
+            <span class="reward-value" id="gameover-xp">+0 XP</span>
+          </div>
+        </div>
+        <div class="gameover-stats">
+          <div class="gameover-stat">
+            <span class="stat-val" id="gameover-levels">0</span>
+            <span class="stat-label">Levels</span>
+          </div>
+          <div class="gameover-stat">
+            <span class="stat-val" id="gameover-streak">0</span>
+            <span class="stat-label">Best Streak</span>
+          </div>
+          <div class="gameover-stat">
+            <span class="stat-val" id="gameover-score">0</span>
+            <span class="stat-label">Score</span>
+          </div>
+        </div>
+        <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        <button class="menu-btn" id="gameover-menu-btn">Main Menu</button>
+      </div>
+    </div>
+
+    <!-- Power-ups Bar (during gameplay) -->
+    <div class="powerups-bar" id="powerups-bar">
+      <button class="powerup-btn" data-powerup="revealOne" id="powerup-reveal" title="Reveal 1 correct switch">
+        <span class="powerup-icon">💡</span>
+        <span class="powerup-label">Reveal</span>
+        <span class="powerup-cost">150</span>
+      </button>
+      <button class="powerup-btn" data-powerup="extraLife" id="powerup-life" title="+1 retry this level">
+        <span class="powerup-icon">❤️</span>
+        <span class="powerup-label">+Life</span>
+        <span class="powerup-cost">100</span>
+      </button>
+      <button class="powerup-btn" data-powerup="skipLevel" id="powerup-skip" title="Skip to next level (no points)">
+        <span class="powerup-icon">⏭️</span>
+        <span class="powerup-label">Skip</span>
+        <span class="powerup-cost">1000</span>
+      </button>
+    </div>
+
+    <!-- Level Complete Celebration -->
+    <div class="level-complete-overlay" id="level-complete-overlay">
+      <div class="level-complete-content">
+        <div class="level-badge-container">
+          <div class="level-badge">
+            <span class="level-badge-num" id="complete-level-num">1</span>
+          </div>
+          <div class="level-badge-glow"></div>
+        </div>
+        <h2 class="level-complete-title">Level Complete!</h2>
+        <div class="level-rewards">
+          <div class="level-reward">
+            <span class="coin-icon">🪙</span>
+            <span class="reward-amount" id="level-coins-earned">+100</span>
+          </div>
+          <div class="level-reward">
+            <span class="xp-icon">⭐</span>
+            <span class="reward-amount" id="level-xp-earned">+50 XP</span>
+          </div>
+        </div>
+        <div class="streak-indicator" id="streak-indicator">
+          <span class="streak-fire">🔥</span>
+          <span class="streak-text" id="streak-text">3 Streak!</span>
+        </div>
+        <div class="perfect-indicator" id="perfect-indicator">
+          <span>✨ Perfect! ✨</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievement Unlock Toast -->
+    <div class="achievement-toast" id="achievement-toast">
+      <div class="achievement-toast-icon" id="achievement-toast-icon">🏆</div>
+      <div class="achievement-toast-info">
+        <span class="achievement-toast-title">Achievement Unlocked!</span>
+        <span class="achievement-toast-name" id="achievement-toast-name">First Steps</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Elements -->
+  <audio id="sound-toggle-on" preload="auto"></audio>
+  <audio id="sound-toggle-off" preload="auto"></audio>
+  <audio id="sound-success" preload="auto"></audio>
+  <audio id="sound-fail" preload="auto"></audio>
+  <audio id="sound-coin" preload="auto"></audio>
+  <audio id="sound-levelup" preload="auto"></audio>
+  <audio id="sound-achievement" preload="auto"></audio>
+
+  <script src="js/audio.js?v=2"></script>
+  <script src="js/confetti.js?v=2"></script>
+  <script src="js/economy.js?v=2"></script>
+  <script src="js/game.js?v=2"></script>
+  <script src="js/ui.js?v=2"></script>
+  <script src="js/main.js?v=2"></script>
+  
+  <!-- EMERGENCY DARK MODE FIX -->
+  <script>
+    // Direct dark mode handler - runs after all other scripts
+    (function() {
+      console.log('🔧 Emergency dark mode fix loaded');
+      
+      // Wait for DOM to be fully ready
+      function initDarkMode() {
+        const toggle = document.getElementById('dark-mode-toggle');
+        console.log('🔧 Dark mode toggle element:', toggle);
+        
+        if (!toggle) {
+          console.error('🔧 Toggle not found, retrying...');
+          setTimeout(initDarkMode, 100);
+          return;
+        }
+        
+        // Add direct event listener
+        toggle.addEventListener('change', function(e) {
+          console.log('🔧 EMERGENCY HANDLER FIRED! Checked:', e.target.checked);
+          const isDark = e.target.checked;
+          
+          // Set attributes
+          document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+          document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+          
+          // Force inline styles
+          document.body.style.background = isDark ? '#0D0D0D' : '#FAFAFA';
+          document.body.style.color = isDark ? '#E8E8E8' : '#2A2A2A';
+          
+          const app = document.getElementById('app');
+          if (app) {
+            app.style.background = isDark ? '#0D0D0D' : '#FAFAFA';
+            app.style.color = isDark ? '#E8E8E8' : '#2A2A2A';
+          }
+          
+          // Update all glassmorphism elements
+          const glassElements = document.querySelectorAll('.gameplay-header, .gameplay-stats-card, .mode-card, .powerups-bar, .settings-content, .modal-content');
+          glassElements.forEach(el => {
+            if (isDark) {
+              el.style.background = 'rgba(30, 30, 30, 0.85)';
+              el.style.color = '#E8E8E8';
+            } else {
+              el.style.background = '';
+              el.style.color = '';
+            }
+          });
+          
+          // Update meta theme color
+          const metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (metaTheme) {
+            metaTheme.setAttribute('content', isDark ? '#0D0D0D' : '#FFFFFF');
+          }
+          
+          console.log('🔧 Dark mode applied:', isDark);
+          console.log('🔧 HTML data-theme:', document.documentElement.getAttribute('data-theme'));
+        });
+        
+        console.log('🔧 Emergency dark mode handler installed successfully');
+      }
+      
+      // Run immediately if DOM is ready, otherwise wait
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDarkMode);
+      } else {
+        initDarkMode();
+      }
+    })();
+  </script>
+</body>
+</html>
